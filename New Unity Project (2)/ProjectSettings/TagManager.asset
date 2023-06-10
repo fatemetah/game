@@ -8,6 +8,7 @@ TagManager:
   - wall
   - Enemy
   - Coin
+  - Shooter
   layers:
   - Default
   - TransparentFX

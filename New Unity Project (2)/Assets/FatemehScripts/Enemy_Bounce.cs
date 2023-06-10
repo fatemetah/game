@@ -22,14 +22,14 @@ public class Enemy_Bounce : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D coll)
     {
-        //if (coll.gameObject.CompareTag("wall"))
-        //{
+        if (coll.gameObject.CompareTag("wall"))
+        {
 
             var speed = lastVelocity.magnitude;
             var direction = Vector3.Reflect(lastVelocity.normalized, coll.contacts[0].normal);
 
             rb.velocity = direction * Mathf.Max(speed, 0f);
-        //}
+        }
 
     }
 

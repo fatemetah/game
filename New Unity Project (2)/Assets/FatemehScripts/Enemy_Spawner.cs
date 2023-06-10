@@ -18,6 +18,7 @@ public class Enemy_Spawner : MonoBehaviour
 
     private IEnumerator Spawner()
     {
+        spawnenRate += Random.Range(0, 4);
         WaitForSeconds wait = new WaitForSeconds(spawnenRate);
 
         while (canSpawn)
@@ -25,7 +26,6 @@ public class Enemy_Spawner : MonoBehaviour
             yield return wait;
             int rand = Random.Range(0, enemyPrefabs.Length);
             GameObject enemyToSpawn = enemyPrefabs[rand];
-
             Instantiate(enemyToSpawn, transform.position, Quaternion.identity);
         }
 

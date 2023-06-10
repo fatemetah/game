@@ -6,9 +6,7 @@ public class Enemy : MonoBehaviour
 {
 
     public float speed = 3f;
-
     private Rigidbody2D rb;
-
     public GameObject NextModel;
     public float health = 2f;
     public Transform transform;
@@ -16,9 +14,10 @@ public class Enemy : MonoBehaviour
 
      void Start()
     {
+        float rand = Random.Range(0, 2) * 2 - 1;
         rb = GetComponent<Rigidbody2D>();
-        rb.AddForce(new Vector2(9.8f * 25f, 9.8f * 25f));
-
+        rb.AddForce(new Vector2(9.8f * 25f * rand, 9.8f * 50f));
+        //rb.gravityScale += 0.5f;
     }
 
      void Update()
@@ -30,21 +29,19 @@ public class Enemy : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D other)
     {
-        if (other.gameObject.CompareTag("Player"))
+        if (other.gameObject.CompareTag("Shooter"))
         {
             Destroy(other.gameObject);
             
             
         } else if (other.gameObject.CompareTag("Bullet")) {
-            health = health - 1f;
+            health -= 1f;
             if (health == 0f)
             {
                 Destroy(other.gameObject);
                 Destroy(gameObject);
                 NextLevel();
             }
-            
-
         }
     }
 
@@ -54,7 +51,6 @@ public class Enemy : MonoBehaviour
         GameObject coin = Instantiate(NextModel, position, Quaternion.identity);
         coin.SetActive(true);
     }
-
 }
 
 
