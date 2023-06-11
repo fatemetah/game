@@ -25,7 +25,25 @@ public class Enemy : MonoBehaviour
         
     }
 
-    
+    void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.gameObject.CompareTag("Shooter"))
+        {
+            Destroy(other.gameObject);
+
+
+        }
+        else if (other.gameObject.CompareTag("Bullet"))
+        {
+            health -= 1f;
+            if (health == 0f)
+            {
+                Destroy(other.gameObject);
+                Destroy(gameObject);
+                NextLevel();
+            }
+        }
+    }
 
     private void OnCollisionEnter2D(Collision2D other)
     {
