@@ -9,6 +9,9 @@ TagManager:
   - Enemy
   - Coin
   - Shooter
+  - LeftWall
+  - RightWall
+  - Ground
   layers:
   - Default
   - TransparentFX

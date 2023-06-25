@@ -17,7 +17,7 @@ public class Enemy : MonoBehaviour
         float rand = Random.Range(0, 2) * 2 - 1;
         rb = GetComponent<Rigidbody2D>();
         rb.AddForce(new Vector2(9.8f * 25f * rand, 9.8f * 50f));
-        //rb.gravityScale += 0.5f;
+        //rb.gravityScale += 1.5f;
     }
 
      void Update()
