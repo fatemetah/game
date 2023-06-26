@@ -3,25 +3,32 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+
 public class PauseMenu : MonoBehaviour
 {
 
     public static bool GameIsPaused = false;
 
     public GameObject pauseMenuUI;
+    public GameObject loserMenuUI;
+
 
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (GameIsPaused)
+            if(loserMenuUI.activeSelf != true)
             {
-                Resume();
+                if (GameIsPaused)
+                {
+                    Resume();
+                }
+                else
+                {
+                    Pause();
+                }
             }
-            else
-            {
-                Pause();
-            }
+
         }
 
     }

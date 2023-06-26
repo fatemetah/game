@@ -4436,6 +4436,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pauseMenuUI: {fileID: 1057511899}
+  loserMenuUI: {fileID: 693253844}
 --- !u!1 &1633595688
 GameObject:
   m_ObjectHideFlags: 0
