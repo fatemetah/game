@@ -29,8 +29,9 @@ public class Enemy : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Shooter"))
         {
-            Destroy(other.gameObject);
-
+            
+            other.gameObject.SetActive(false);
+            //Destroy(other.gameObject);
 
         }
         else if (other.gameObject.CompareTag("Bullet"))
@@ -49,7 +50,8 @@ public class Enemy : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Shooter"))
         {
-            Destroy(other.gameObject);
+            other.gameObject.SetActive(false);
+            //Destroy(other.gameObject);
             
             
         } else if (other.gameObject.CompareTag("Bullet")) {
