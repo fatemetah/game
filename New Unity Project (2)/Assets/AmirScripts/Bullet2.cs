@@ -11,17 +11,10 @@ public class Bullet2 : MonoBehaviour
     {
         Destroy(gameObject, LifeTime);
     }
-    void OnTriggerExit2D(Collider2D collision)
+    void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Enemy")
+        if (collision.gameObject.tag == "Enemy1" || collision.gameObject.tag == "Enemy2" || collision.gameObject.tag == "Enemy3")
         {
-            Destroy(gameObject);
-        }
-    }
-    void OnCollisionEnter2D(Collision2D collision)
-    {
-        //Debug.Log("khord");
-        if (collision.gameObject.tag == "Enemy") {
             Destroy(gameObject);
         }
     }

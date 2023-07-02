@@ -5,7 +5,7 @@ using UnityEngine;
 public class DooghYMove : MonoBehaviour
 {
     public GameObject leftWing;
-    float MoveY = 0.004f;
+    float MoveY = 0.008f;
     void Start()
     {
 

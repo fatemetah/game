@@ -10,14 +10,14 @@ public class Enemy : MonoBehaviour
     public GameObject NextModel;
     public float health = 2f;
     public Transform transform;
-
+    public ToggleScript Tgrav;
 
      void Start()
     {
         float rand = Random.Range(0, 2) * 2 - 1;
         rb = GetComponent<Rigidbody2D>();
         rb.AddForce(new Vector2(9.8f * 25f * rand, 9.8f * 50f));
-        //rb.gravityScale += 1.5f;
+        rb.gravityScale = Tgrav.Getgrav();
     }
 
      void Update()
@@ -25,7 +25,7 @@ public class Enemy : MonoBehaviour
         
     }
 
-    void OnTriggerExit2D(Collider2D other)
+    void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.CompareTag("Shooter"))
         {
@@ -37,7 +37,7 @@ public class Enemy : MonoBehaviour
         else if (other.gameObject.CompareTag("Bullet"))
         {
             health -= 1f;
-            if (health == 0f)
+            if (health == 0f /*&& gameObject.CompareTag("Enemy1")*/)
             {
                 Destroy(other.gameObject);
                 Destroy(gameObject);
@@ -46,7 +46,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D other)
+    /*private void OnCollisionEnter2D(Collision2D other)
     {
         if (other.gameObject.CompareTag("Shooter"))
         {
@@ -63,7 +63,7 @@ public class Enemy : MonoBehaviour
                 NextLevel();
             }
         }
-    }
+    }*/
 
      void NextLevel()
     {

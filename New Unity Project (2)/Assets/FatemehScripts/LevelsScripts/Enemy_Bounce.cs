@@ -56,9 +56,13 @@ public class Enemy_Bounce : MonoBehaviour
         if (coll.gameObject.CompareTag("Ground"))
         {
             gameObject.GetComponent<BoxCollider2D>().enabled = false;
+            Rigidbody2D rb = GetComponent<Rigidbody2D>();
+            //rb.AddForce(transform.up);
+            //Debug.Log(rb.velocity+" aha");
             var speed = lastVelocity.magnitude*8;
             if (booli)
             {
+                //rb.AddForce(transform.up);
                 speed -= lastVelocity.magnitude;
                 booli = false;
             }

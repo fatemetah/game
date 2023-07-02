@@ -12,6 +12,9 @@ TagManager:
   - LeftWall
   - RightWall
   - Ground
+  - Enemy1
+  - Enemy2
+  - Enemy3
   layers:
   - Default
   - TransparentFX
