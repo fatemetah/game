@@ -294,7 +294,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 838048366}
+      - m_Target: {fileID: 1866924965}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
         m_Mode: 6
@@ -4124,8 +4124,13 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
+<<<<<<< Updated upstream
   m_AnchoredPosition: {x: -259.79, y: -325}
   m_SizeDelta: {x: 477.9603, y: 101.0329}
+=======
+  m_AnchoredPosition: {x: -258.46582, y: -356.21387}
+  m_SizeDelta: {x: 516.2334, y: 132.6215}
+>>>>>>> Stashed changes
   m_Pivot: {x: -0.043542083, y: -0.7980246}
 --- !u!114 &1464230574
 MonoBehaviour:
@@ -5595,9 +5600,15 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
+<<<<<<< Updated upstream
   m_AnchoredPosition: {x: 223, y: 57}
   m_SizeDelta: {x: 80.9912, y: 27.4325}
   m_Pivot: {x: 0.634331, y: 2.398086}
+=======
+  m_AnchoredPosition: {x: -16.7, y: -3}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+>>>>>>> Stashed changes
 --- !u!114 &1796353288
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5681,7 +5692,11 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
+<<<<<<< Updated upstream
   m_margin: {x: -229.288, y: 0, z: 211.8075, w: -6.531555}
+=======
+  m_margin: {x: 17.167511, y: 0, z: -69.049255, w: 0}
+>>>>>>> Stashed changes
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0

@@ -15,6 +15,7 @@ TagManager:
   - Enemy1
   - Enemy2
   - Enemy3
+  - ghost
   layers:
   - Default
   - TransparentFX
