@@ -1,0 +1,4 @@
+Fonts used in this project (all free to use and embed in games, SIL Open Font License 1.1 - https://openfontlicense.org):
+- Bangers by Vernon Adams
+- Lilita One by Juan Montoreano
+- Vazirmatn by Saber Rastikerdar

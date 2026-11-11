@@ -1,36 +1,53 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
-using UnityEngine.UI; 
+using UnityEngine.UI;
 
+// Game mode screen: the ticked toggle is saved right away (no Save button needed).
+// Also kept on the enemy prefabs for compatibility: Getgrav() returns the current mode's gravity.
 public class ToggleScript : MonoBehaviour
 {
-    private float grav = 0.5f;
     public float Getgrav()
     {
-        return grav;
+        return GameDifficulty.Gravity;
     }
-    void SetGrav(float gra)
+
+    void OnEnable()
     {
-        grav = gra;
+        foreach (Toggle t in GetComponentsInChildren<Toggle>(true))
+        {
+            t.SetIsOnWithoutNotify(LevelOf(t) == GameDifficulty.Current);
+            t.onValueChanged.RemoveListener(OnToggle);
+            t.onValueChanged.AddListener(OnToggle);
+        }
     }
-    ToggleGroup toggleGroup;
 
-     void Start()
+    void OnDisable()
     {
-        toggleGroup = GetComponent<ToggleGroup>();
+        foreach (Toggle t in GetComponentsInChildren<Toggle>(true))
+            t.onValueChanged.RemoveListener(OnToggle);
     }
 
-    public void Submit()
+    void OnToggle(bool isOn)
     {
-        Toggle toggle = toggleGroup.ActiveToggles().FirstOrDefault();
-        if (toggle.name == "HardMode Toggle") { Debug.Log(toggle.name); SetGrav(1.2f); Debug.Log(grav);}
-        if (toggle.name == "MediumMode Toggle") { SetGrav(0.5f); Debug.Log(grav); }
-        if (toggle.name == "EasyMode Toggle") { SetGrav(0.3f); Debug.Log(grav); }
-        if (toggle.name == "TahmaMode Toggle") { SetGrav(2f); Debug.Log(grav); }
-        Debug.Log(toggle.name + "_" + toggle.GetComponentInChildren<Text>().text);
+        if (!isOn) return;
+        foreach (Toggle t in GetComponentsInChildren<Toggle>(true))
+        {
+            if (t.isOn)
+            {
+                GameDifficulty.Current = LevelOf(t);
+                return;
+            }
+        }
     }
 
+    // Kept so old button links don't break; the mode is already saved on tick.
+    public void Submit() { }
 
+    static GameDifficulty.Level LevelOf(Toggle t)
+    {
+        string n = t.name.Trim();
+        if (n == "EasyMode Toggle") return GameDifficulty.Level.Easy;
+        if (n == "HardMode Toggle") return GameDifficulty.Level.Hard;
+        if (n == "TahmaMode Toggle") return GameDifficulty.Level.Tahma;
+        return GameDifficulty.Level.Medium;
+    }
 }

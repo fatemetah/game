@@ -1,29 +1,33 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using System;
 
+// A bullet flies straight up. Bullets are reused (not created and destroyed every shot),
+// which avoids small hiccups on slow phones.
 public class Bullet2 : MonoBehaviour
 {
-    //float BulletSpeed = 5f;
-    float LifeTime = 1f;
-    void Awake()
+    const float LifeTime = 1f;
+    public Vector2 dir = Vector2.up;   // straight up, or tilted for the CO2 side shots
+    float bornAt;
+
+    void OnEnable()
     {
-        Destroy(gameObject, LifeTime);
+        bornAt = Time.time;
+        dir = Vector2.up;
     }
-    void OnTriggerEnter2D(Collider2D collision)
+
+    // Put a bullet back in the pool (or destroy it if it isn't a pooled bullet)
+    public static void Recycle(GameObject bullet)
     {
-        if (collision.gameObject.tag == "Enemy1" || collision.gameObject.tag == "Enemy2" || collision.gameObject.tag == "Enemy3")
-        {
-            Destroy(gameObject);
-        }
+        if (bullet == null) return;
+        if (bullet.GetComponent<Bullet2>() != null) bullet.SetActive(false);
+        else Object.Destroy(bullet);
     }
-    void Start()
+
+    // (A hit is handled by the enemy: it counts the bullet once and turns it off.)
+
+    void FixedUpdate()
     {
-    }
-    
-    private void FixedUpdate()
-    {
-        transform.Translate(0, 0.17f, 0);
+        if (Time.time - bornAt >= LifeTime) { gameObject.SetActive(false); return; }
+        transform.rotation = Quaternion.FromToRotation(Vector3.up, dir);   // points where it flies
+        transform.Translate(dir * 0.17f, Space.World);
     }
 }
