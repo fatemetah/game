@@ -9,6 +9,8 @@ public class PlayerShield : MonoBehaviour
     SpriteRenderer[] sprites;
     Color[] baseColors;
 
+    public float SecondsLeft => Mathf.Max(0f, endTime - Time.time);
+
     public bool IsActive { get { return Time.time < endTime; } }
 
     public void Activate(float seconds)

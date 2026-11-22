@@ -4,18 +4,25 @@ using UnityEngine;
 
 public class Shooter : MonoBehaviour
 {
+    SkinAbility ability;
+
+    void Awake()
+    {
+        gameObject.AddComponent<DooghSkinView>();
+        ability = gameObject.AddComponent<SkinAbility>();
+    }
+
     Vector3 bulletSpawnPoint;
     public GameObject bulletPrefab;
     // Time between two shots while the finger is held down (in seconds).
     // Based on real time, so it is the same on every phone, fast or slow.
-    const float FireInterval = 0.2f;     // 5 shots per second
+    const float FireInterval = 0.15f;    // roughly 6.7 shots per second
     const float GasFireInterval = 0.1f;  // CO2: 10 shots per second
     float nextFizz;
 
-    static void SetDir(GameObject bullet, Vector2 d)
+    internal void ShootStandard(Vector3 position, Vector2 direction)
     {
-        var b = bullet.GetComponent<Bullet2>();
-        if (b != null) b.dir = d.normalized;
+        GetBullet(position).GetComponent<Bullet2>().dir = direction.normalized;
     }
     float lastShot = -10f;
 
@@ -73,15 +80,7 @@ public class Shooter : MonoBehaviour
     {
         if (Time.timeScale == 0f) return;   // paused / game over
         if (Input.GetMouseButtonDown(0)) pressOnUI = PauseMenu.PointerOverUI();
-        Vector3 mousePos = Input.mousePosition;
-        mousePos = Camera.main.ScreenToWorldPoint(mousePos);
-        mousePos.z = 10;
-        if (mousePos.x < -3.8f) { mousePos.x = -3.8f; }
-        if (mousePos.x > 3.8f) { mousePos.x = 3.8f; }
-        mousePos.y = MuzzleY();   // top of the bottle
-        //mousePos.x += 0.03f;
-        mousePos.x = transform.position.x;   // bullets always come out of the doogh
-        bulletSpawnPoint = mousePos;
+        bulletSpawnPoint = new Vector3(transform.position.x, MuzzleY(), transform.position.z);
         bool gas = PowerUps.GasActive;
 
         // CO2: the doogh fizzes over
@@ -95,16 +94,21 @@ public class Shooter : MonoBehaviour
         if (Input.GetKey(KeyCode.Mouse0) && !pressOnUI && Time.time - lastShot >= interval)
         {
             lastShot = Time.time;
+            bool seed = ability.RollOrangeSeed();
             if (gas)
             {
-                // three directions: straight up and a little to each side
-                SetDir(GetBullet(bulletSpawnPoint), new Vector2(-0.32f, 1f));
-                SetDir(GetBullet(bulletSpawnPoint), Vector2.up);
-                SetDir(GetBullet(bulletSpawnPoint), new Vector2(0.32f, 1f));
+                FirePlayerShot(new Vector2(-0.32f, 1f), seed);
+                FirePlayerShot(new Vector2(0.32f, 1f), seed);
             }
-            else GetBullet(bulletSpawnPoint);
+            FirePlayerShot(Vector2.up, seed);
             Sfx.Play("shoot", 0.35f, 0.08f);
             //bullet.AddComponent<Rigidbody2D>();
         }
+    }
+
+    void FirePlayerShot(Vector2 direction, bool seed)
+    {
+        if (seed) ability.FireSeed(bulletSpawnPoint, direction);
+        else ShootStandard(bulletSpawnPoint, direction);
     }
 }

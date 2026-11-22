@@ -7,6 +7,29 @@ using UnityEngine.UI;
 public class Coin_Counter : MonoBehaviour
 {
     public static int coins;
+    const string WalletKey = "CoinWalletBalance";
+    public static int WalletBalance
+    {
+        get => PlayerPrefs.GetInt(WalletKey, 0);
+        internal set => PlayerPrefs.SetInt(WalletKey, value);
+    }
+    public static int WalletEarned { get; private set; }
+
+    void Awake()
+    {
+        coins = 0;
+        WalletEarned = 0;
+    }
+
+    public static void Collect(int count)
+    {
+        int multiplier = 1 + (int)GameDifficulty.Current;
+        int credit = count * multiplier;
+        coins += count;
+        WalletEarned += credit;
+        WalletBalance = (int)System.Math.Min(int.MaxValue, (long)WalletBalance + credit);
+        PlayerPrefs.Save();
+    }
 
     public TMP_Text label;      // comic number (new score badge)
     Text legacy;                // old plain text, if this is still the old counter

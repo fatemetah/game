@@ -18,7 +18,7 @@ public class Bullet2 : MonoBehaviour
     public static void Recycle(GameObject bullet)
     {
         if (bullet == null) return;
-        if (bullet.GetComponent<Bullet2>() != null) bullet.SetActive(false);
+        if (bullet.GetComponent<Bullet2>() != null || bullet.GetComponent<SkinProjectile>() != null) bullet.SetActive(false);
         else Object.Destroy(bullet);
     }
 

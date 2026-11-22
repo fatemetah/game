@@ -21,6 +21,17 @@ public class NamePopup : MonoBehaviour
     string value = "";
     TouchScreenKeyboard keyboard;
 
+    void Awake()
+    {
+        var go = (RectTransform)card.Find("Go Button");
+        var back = (RectTransform)transform.Find("Back Button");
+        back.SetParent(card, false);
+        back.sizeDelta = new Vector2(235f, 94f);
+        back.anchoredPosition = new Vector2(-206f, -169f);
+        go.sizeDelta = new Vector2(360f, 127f);
+        go.anchoredPosition = new Vector2(122f, -169f);
+    }
+
     public static string CurrentName
     {
         get { return PlayerPrefs.GetString(PrefKey, "PLAYER"); }

@@ -9,10 +9,14 @@ public class PowerUpSpawner : MonoBehaviour
 
     float last;
     float nextCheck;
+    float mintWeight, gasWeight;
 
     void Start()
     {
         last = Time.time;
+        string skin = DooghSkins.Current;
+        mintWeight = skin == "Mint" ? 2f : 1f;
+        gasWeight = skin == "Gas" ? 2f : 1f;
     }
 
     void Update()
@@ -24,13 +28,14 @@ public class PowerUpSpawner : MonoBehaviour
         if (PowerUps.MintActive || PowerUps.GasActive) return;
         if (FindObjectOfType<PowerUpItem>() != null) return;
         if (GameObject.FindWithTag("ghost") != null) return;
-        if (Random.value > chance) return;
+        float totalWeight = mintWeight + gasWeight;
+        if (Random.value >= Mathf.Clamp01(chance * totalWeight * 0.5f)) return;
 
         Camera cam = Camera.main;
         if (cam == null) return;
         float top = cam.transform.position.y + cam.orthographicSize;
         Vector3 pos = new Vector3(Random.Range(-2.8f, 2.8f), top + 1f, 0f);
-        PowerUpItem.Create(Random.value < 0.5f ? PowerUpItem.Kind.Mint : PowerUpItem.Kind.Gas, pos);
+        PowerUpItem.Create(Random.value * totalWeight < mintWeight ? PowerUpItem.Kind.Mint : PowerUpItem.Kind.Gas, pos);
         last = Time.time;
     }
 }

@@ -2609,7 +2609,7 @@ GameObject:
   - component: {fileID: 315741468}
   - component: {fileID: 315741467}
   - component: {fileID: 315741466}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: LeftWall
   m_TagString: LeftWall
   m_Icon: {fileID: 0}
@@ -2659,7 +2659,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1, y: 10}
   m_EdgeRadius: 0
 --- !u!50 &315741467
 Rigidbody2D:
@@ -6140,7 +6140,7 @@ GameObject:
   - component: {fileID: 773924750}
   - component: {fileID: 773924749}
   - component: {fileID: 773924748}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: RightWall
   m_TagString: RightWall
   m_Icon: {fileID: 0}
@@ -6190,7 +6190,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1, y: 10}
   m_EdgeRadius: 0
 --- !u!50 &773924749
 Rigidbody2D:
@@ -11418,7 +11418,7 @@ GameObject:
   - component: {fileID: 1658694977}
   - component: {fileID: 1658694976}
   - component: {fileID: 1658694975}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Ground
   m_TagString: Ground
   m_Icon: {fileID: 0}

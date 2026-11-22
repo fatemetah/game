@@ -6,7 +6,15 @@ using UnityEngine;
 [RequireComponent(typeof(SpriteRenderer))]
 public class FitBackgroundToCamera : MonoBehaviour
 {
-    void Start() { Fit(); }
+    void Start()
+    {
+        if (Application.isPlaying)
+        {
+            Sprite selected = DooghBackgrounds.SelectedArt();
+            if (selected != null) GetComponent<SpriteRenderer>().sprite = selected;
+        }
+        Fit();
+    }
 
 #if UNITY_EDITOR
     void Update() { if (!Application.isPlaying) Fit(); }

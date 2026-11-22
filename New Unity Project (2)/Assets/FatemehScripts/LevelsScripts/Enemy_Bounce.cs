@@ -1,25 +1,18 @@
 using UnityEngine;
 
-// Bouncing off the walls and the floor.
-// Floor: the first bounce goes up to about half the height of the screen,
-// every next bounce reaches 3/4 of the height of the one before,
-// but never less than MinHeight, so cans and sugar keep hopping instead of
-// lying still in the doogh's way.
-// The height is worked out from the gravity, so it is the same in every game mode
-// (and with MINT, things just move slower along the same path).
+// Sugar keeps its arcade bounce, with enough clearance to rotate at the top of its arc.
 public class Enemy_Bounce : MonoBehaviour
 {
-    const float FirstBounceShare = 0.5f;   // first bounce: half of the play area
-    const float Decay = 0.75f;             // each bounce: three quarters of the previous one
-    const float MinHeight = 1.5f;          // world units (about one sugar cube)
+    const float MinShare = 0.45f;          // a bounce always reaches at least a bit under half of the play area
 
     Rigidbody2D rb;
     Vector3 lastVelocity;
-    float nextHeight = -1f;
+    BoxCollider2D box;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        box = GetComponent<BoxCollider2D>();
     }
 
     void Update()
@@ -55,15 +48,25 @@ public class Enemy_Bounce : MonoBehaviour
     public float NextBounceSpeed()
     {
         // The same floor hit can be reported twice (the collision and the play-area guard):
-        // count it only once, so each bounce really is 3/4 of the one before
+        // count it only once
         if (Time.time - lastBounceTime < 0.25f) return lastBounceSpeed;
         lastBounceTime = Time.time;
 
-        if (nextHeight < 0f) nextHeight = FirstBounceShare * PlayHeight();
-        float h = Mathf.Max(nextHeight, MinHeight);
-        nextHeight = h * Decay;
+        float speed = Mathf.Abs(lastVelocity.y);           // how fast it came down
+
         float g = Mathf.Abs(Physics2D.gravity.y) * Mathf.Max(0.0001f, rb.gravityScale);
-        lastBounceSpeed = Mathf.Sqrt(2f * g * h);   // speed that reaches exactly height h
+        float ph = PlayHeight();
+        float minSpeed = Mathf.Sqrt(2f * g * MinShare * ph);   // speed that reaches the lowest allowed height
+        lastBounceSpeed = Mathf.Max(speed, minSpeed);
+        Camera cam = Camera.main;
+        if (cam != null && cam.orthographic)
+        {
+            float radius = 0.5f * Vector2.Scale(box.size, transform.lossyScale).magnitude;
+            float top = cam.transform.position.y + cam.orthographicSize;
+            float clearance = top - rb.worldCenterOfMass.y - radius - 0.15f;
+            float maxSpeed = Mathf.Sqrt(2f * g * Mathf.Max(0f, clearance));
+            lastBounceSpeed = Mathf.Min(lastBounceSpeed, maxSpeed);
+        }
         return lastBounceSpeed;
     }
 

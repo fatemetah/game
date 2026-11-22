@@ -22,9 +22,14 @@ public class Enemy : MonoBehaviour
         else if (gameObject.CompareTag("Enemy1")) health = 2f;
         maxHealth = health;
 
-        // Never leave the play area
-        StayInPlayfield bounds = GetComponent<StayInPlayfield>();
-        if (bounds == null) bounds = gameObject.AddComponent<StayInPlayfield>();
+        // Cans use solid contacts with the playfield. Sugar and ghosts use the arcade bounds.
+        StayInPlayfield bounds = null;
+        if (!CompareTag("Enemy2") && !CompareTag("Enemy3"))
+        {
+            bounds = GetComponent<StayInPlayfield>();
+            if (bounds == null) bounds = gameObject.AddComponent<StayInPlayfield>();
+            if (CompareTag("Enemy1")) bounds.useCeiling = true;
+        }
 
         if (gameObject.CompareTag("ghost"))
         {
@@ -63,7 +68,39 @@ public class Enemy : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D c)
     {
-        if (gameObject.CompareTag("ghost") && c.gameObject.CompareTag("Ground")) StartGhostCountdown();
+        if (!c.gameObject.CompareTag("Ground")) return;
+        if (CompareTag("ghost")) StartGhostCountdown();
+        else BounceCanOffFloor(c);
+    }
+
+    void OnCollisionStay2D(Collision2D c)
+    {
+        // A tilted can can keep one corner touching the floor after the initial impact.
+        if (rb.velocity.y <= 0f && c.gameObject.CompareTag("Ground")) BounceCanOffFloor(c);
+    }
+
+    void BounceCanOffFloor(Collision2D contact)
+    {
+        if (!CompareTag("Enemy2") && !CompareTag("Enemy3")) return;
+        Camera cam = Camera.main;
+        if (cam == null) return;
+
+        for (int i = 0; i < contact.contactCount; i++)
+        {
+            if (contact.GetContact(i).normal.y < 0.5f) continue;
+
+            float floor = contact.collider.bounds.max.y;
+            float height = cam.transform.position.y + cam.orthographicSize - floor;
+            // Allow space for the top corner even if the can rotates in flight.
+            BoxCollider2D box = (BoxCollider2D)contact.otherCollider;
+            float radius = 0.5f * Vector2.Scale(box.size, box.transform.lossyScale).magnitude;
+            float targetRise = Mathf.Max(0f, floor + height * 0.5f - rb.worldCenterOfMass.y - radius);
+            float gravity = Mathf.Abs(Physics2D.gravity.y * rb.gravityScale);
+            Vector2 velocity = rb.velocity;
+            velocity.y = Mathf.Sqrt(2f * gravity * targetRise);
+            rb.velocity = velocity;
+            return;
+        }
     }
 
     // ---- MINT: everything slows down. Speed and gravity are scaled together so the
@@ -134,6 +171,7 @@ public class Enemy : MonoBehaviour
                 PlayerShield shield = other.GetComponent<PlayerShield>();
                 if (shield == null) shield = other.gameObject.AddComponent<PlayerShield>();
                 shield.Activate(10f);
+                PowerUpHud.ShowShield(shield, GetComponent<SpriteRenderer>().sprite);
                 Sfx.Play("ghost", 1f, 0f);
                 Destroy(gameObject);
             }
@@ -157,8 +195,9 @@ public class Enemy : MonoBehaviour
             // A bullet has two colliders, so it can "touch" twice at once. Count each bullet only once:
             // the first touch uses it up (turns it off), any later touch from it is ignored.
             if (!other.gameObject.activeSelf) return;
+            bool seedHit = other.TryGetComponent<SkinProjectile>(out var projectile) && projectile.IsOrangeSeed;
+            health = seedHit ? 0f : health - 1f;
             Bullet2.Recycle(other.gameObject);
-            health -= 1f;
             if (health > 0f)
             {
                 // still alive: show how damaged it is, shake, flash and a little spark where it was hit

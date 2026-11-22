@@ -22,6 +22,8 @@ public class PauseMenu : MonoBehaviour
         // Escape on computer = Back button on Android
         if (Input.GetKeyDown(KeyCode.Escape) && !lost)
         {
+            var picker = pauseMenuUI.GetComponentInChildren<SkinPicker>();
+            if (GameIsPaused && picker != null && picker.Close()) return;
             if (!GameIsPaused) Pause();
             else if (Sub("OptionsMenu") != null && Sub("OptionsMenu").activeSelf) ShowMainCard();   // OPTIONS -> back to PAUSED
             else Resume();

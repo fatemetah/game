@@ -13,9 +13,18 @@ public static class Sfx
     static readonly Dictionary<string, AudioClip> clips = new Dictionary<string, AudioClip>();
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-    static void ApplySavedVolume()
+    static void ResetAudio()
     {
-        AudioListener.volume = OptionsMenu.SavedVolume01();
+        AudioListener.volume = 1f;
+        sources = null;
+        next = 0;
+    }
+
+    public static void SetGain(float gain)
+    {
+        if (sources == null) return;
+        foreach (var source in sources)
+            if (source != null) source.volume = gain;
     }
 
     static AudioSource FreeSource()
@@ -30,6 +39,7 @@ public static class Sfx
                 var a = go.AddComponent<AudioSource>();
                 a.playOnAwake = false;
                 a.ignoreListenerPause = true;
+                a.volume = OptionsMenu.EffectsGain;
                 sources[i] = a;
             }
         }
@@ -55,9 +65,7 @@ public static class Sfx
         if (clip == null) return;
         AudioSource src = FreeSource();
         src.Stop();
-        src.clip = clip;
-        src.volume = volume;
         src.pitch = 1f + Random.Range(-pitchVariation, pitchVariation);
-        src.Play();
+        src.PlayOneShot(clip, volume);
     }
 }

@@ -21,6 +21,10 @@ public class Enemy_Spawner : MonoBehaviour
 
     private void Start()
     {
+        if (DooghSkins.Current == "Herbs")
+        {
+            ghostChance = Mathf.Clamp01(ghostChance * 2f);
+        }
         foreach (GameObject p in enemyPrefabs)
         {
             if (p == null) continue;
@@ -45,8 +49,9 @@ public class Enemy_Spawner : MonoBehaviour
             // after the first one: recalculated every time, so cans come more often as the game goes on
             wait = baseDelay * GameDifficulty.SpawnDelayMultiplier;
             if (PowerUps.MintActive) wait /= 0.55f;   // MINT: new cans also come slower
-            GameObject e = Instantiate(Pick(), SpawnPoint(), Quaternion.identity);
-            PushAboveScreen(e);
+            var prefab = Pick();
+            Vector3 pos = SpawnPoint();
+            PushAboveScreen(Instantiate(prefab, pos, Quaternion.identity));
         }
     }
 

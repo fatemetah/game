@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: -5598330030893555991}
   - component: {fileID: 2607523445095833866}
   - component: {fileID: 8006926032847342053}
-  - component: {fileID: 3459368874337610322}
   - component: {fileID: -3069134597366989529}
   m_Layer: 0
   m_Name: Enemy 3.0
@@ -97,15 +96,15 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2514951740969642700}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 4e98d5eb3f7540c885fbb1094d97e41d, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 4294967039
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
@@ -205,7 +204,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 0
 --- !u!114 &8006926032847342053
 MonoBehaviour:
@@ -225,18 +224,6 @@ MonoBehaviour:
   health: 10
   transform: {fileID: 4687313338685736411}
   Tgrav: {fileID: -3069134597366989529}
---- !u!114 &3459368874337610322
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2514951740969642700}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dee42b5bbc1f9ac40b870b232cfcfef6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &-3069134597366989529
 MonoBehaviour:
   m_ObjectHideFlags: 0

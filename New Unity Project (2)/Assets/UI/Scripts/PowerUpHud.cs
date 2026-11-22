@@ -4,19 +4,28 @@ using UnityEngine.UI;
 
 // Shows what a prize is doing:
 //   - an icy frame around the screen while MINT is on
-//   - a small timer (icon + seconds left) under the score for MINT and CO2
+//   - a small timer (icon + seconds left) under the score for each active prize
 public class PowerUpHud : MonoBehaviour
 {
     static PowerUpHud inst;
 
     Image frost, tint;
-    GameObject mintChip, gasChip;
-    TMP_Text mintText, gasText;
+    GameObject mintChip, gasChip, ghostChip;
+    TMP_Text mintText, gasText, ghostText;
+    PlayerShield shield;
     float frostAlpha;
 
     public static void Ensure()
     {
         if (inst == null) inst = new GameObject("PowerUp HUD").AddComponent<PowerUpHud>();
+    }
+
+    public static void ShowShield(PlayerShield activeShield, Sprite icon)
+    {
+        Ensure();
+        inst.shield = activeShield;
+        if (inst.ghostChip == null)
+            inst.ghostChip = inst.Chip("Ghost Timer", icon, inst.mintText.font, out inst.ghostText);
     }
 
     void Awake()
@@ -33,7 +42,7 @@ public class PowerUpHud : MonoBehaviour
         frost = FullScreen("Frost", FrostSprite(), new Color(1f, 1f, 1f, 0f));
 
         TMP_FontAsset font = null;
-        var counter = FindObjectOfType<Coin_Counter>();
+        counter = FindObjectOfType<Coin_Counter>();
         if (counter != null && counter.label != null) font = counter.label.font;
 
         mintChip = Chip("Mint Timer", Resources.Load<Sprite>("PowerUps/Mint"), font, out mintText);
@@ -101,32 +110,31 @@ public class PowerUpHud : MonoBehaviour
 
         // hide everything on the GAME OVER screen (the score badge is hidden there too)
         if (counter == null) counter = FindObjectOfType<Coin_Counter>(true);
-        if (counter == null || !counter.gameObject.activeInHierarchy) { mint = false; gas = false; }
+        bool visible = counter != null && counter.gameObject.activeInHierarchy;
+        mint &= visible;
+        gas &= visible;
+        bool ghost = visible && shield != null && shield.isActiveAndEnabled && shield.IsActive;
 
         // icy screen fades in/out
         frostAlpha = Mathf.MoveTowards(frostAlpha, mint ? 1f : 0f, Time.unscaledDeltaTime * 3f);
         frost.color = new Color(1f, 1f, 1f, frostAlpha * 0.9f);
         tint.color = new Color(0.55f, 0.85f, 1f, frostAlpha * 0.14f);
 
-        // timers under the score (side by side if both are on)
-        mintChip.SetActive(mint);
-        gasChip.SetActive(gas);
-        float y = -160f;
-        if (mint && gas)
-        {
-            Place(mintChip, -100f, y); Place(gasChip, 100f, y);
-        }
-        else
-        {
-            Place(mintChip, 0f, y); Place(gasChip, 0f, y);
-        }
-        if (mint) Show(mintText, PowerUps.MintLeft);
-        if (gas) Show(gasText, PowerUps.GasLeft);
+        int count = (mint ? 1 : 0) + (gas ? 1 : 0) + (ghost ? 1 : 0);
+        float x = -(count - 1) * 100f;
+        UpdateTimer(mintChip, mintText, mint, PowerUps.MintLeft, ref x);
+        UpdateTimer(gasChip, gasText, gas, PowerUps.GasLeft, ref x);
+        if (ghostChip != null)
+            UpdateTimer(ghostChip, ghostText, ghost, ghost ? shield.SecondsLeft : 0f, ref x);
     }
 
-    static void Place(GameObject chip, float x, float y)
+    static void UpdateTimer(GameObject chip, TMP_Text label, bool active, float left, ref float x)
     {
-        ((RectTransform)chip.transform).anchoredPosition = new Vector2(x, y);
+        chip.SetActive(active);
+        if (!active) return;
+        ((RectTransform)chip.transform).anchoredPosition = new Vector2(x, -160f);
+        Show(label, left);
+        x += 200f;
     }
 
     static void Show(TMP_Text t, float left)

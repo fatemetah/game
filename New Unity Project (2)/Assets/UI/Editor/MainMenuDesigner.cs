@@ -873,6 +873,26 @@ public static class MainMenuDesigner
     [MenuItem("Tools/Test: Drop CO2")]
     static void DropGas() { DropPrize(PowerUpItem.Kind.Gas); }
 
+    const string DropGhostMenu = "Tools/Test: Drop Ghost";
+
+    [MenuItem(DropGhostMenu, true)]
+    static bool CanDropGhost()
+    {
+        return Application.isPlaying && SceneManager.GetActiveScene().name == "Level_1"
+            && Time.timeScale > 0f && Camera.main != null;
+    }
+
+    [MenuItem(DropGhostMenu)]
+    static void DropGhost()
+    {
+        var prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/ghost.prefab");
+        if (prefab == null) { Debug.LogError("Ghost prefab missing: Assets/ghost.prefab"); return; }
+
+        Camera cam = Camera.main;
+        Vector3 position = new Vector3(cam.transform.position.x, cam.transform.position.y + cam.orthographicSize - 1f, 0f);
+        UnityEngine.Object.Instantiate(prefab, position, Quaternion.identity);
+    }
+
     static void DropPrize(PowerUpItem.Kind kind)
     {
         if (!Application.isPlaying || Camera.main == null) { Debug.Log("Start a game first (Play mode, in the level)."); return; }
@@ -1062,7 +1082,7 @@ public static class MainMenuDesigner
         Row(p, "OPTIONS", btnMedium, White, Ink, "SOUND VOLUME AND GAME MODE", 190);
         Row(p, "SCORES", btnMedium, White, Ink, "TOP 10 FOR EACH MODE", 50);
         Row(p, "QUIT", btnMedium, Ink, White, "CLOSE THE GAME", -90);
-        Body(p, "Text", "MANY PLAYERS ON ONE PHONE?\nEACH ONE TYPES THEIR OWN NAME!", -250, 200, 40);
+        Body(p, "Text", "MANY PLAYERS ON ONE PHONE?\nEACH ONE TYPES THEIR OWN NAME!\n\nTHERE ARE DIFFERENT SKINS.\nEACH HAS ITS OWN SPECIAL ABILITY.", -266, 234, 40);
         pages.Add(p.gameObject);
 
         // Bottom: counter, SKIP, NEXT

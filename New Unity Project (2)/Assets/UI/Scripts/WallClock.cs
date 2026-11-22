@@ -19,6 +19,7 @@ public class WallClock : MonoBehaviour
 
     void Start()
     {
+        if (DooghBackgrounds.Inventory.Current != "Classic") { enabled = false; return; }
         var bg = GetComponent<SpriteRenderer>();
         if (bg.sprite == null) return;
 

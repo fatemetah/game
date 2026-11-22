@@ -45,7 +45,7 @@ public class Coin : MonoBehaviour
         if (collected) return;
         collected = true;
         Destroy(gameObject);
-        Coin_Counter.coins += value;
+        Coin_Counter.Collect(value);
         Sfx.Play("coin", 0.8f);
     }
     bool collected;
